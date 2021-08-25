@@ -54,9 +54,17 @@ def find_afterparties():
     # - Replace the empty list in `events` with the list of events from your
     #   search results
 
-    data = {'Test': ['This is just some test data'],
-            'page': {'totalElements': 1}}
-    events = []
+    res = requests.get(url, params=payload)
+    
+    data = res.json()
+    print(20 * "*")
+    print(data.keys())
+    print(data['page'])
+    print(data['_links'])
+    print(20 * "*")
+
+
+    events = data["_embedded"]["events"]
 
     return render_template('search-results.html',
                            pformat=pformat,

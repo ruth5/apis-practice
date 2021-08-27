@@ -41,7 +41,8 @@ def find_afterparties():
     sort = request.args.get('sort', '')
 
     url = 'https://app.ticketmaster.com/discovery/v2/events'
-    payload = {'apikey': API_KEY}
+    payload = {'apikey': API_KEY, 'keyword': keyword, 'postalCode': postalcode,
+                'radius': radius, 'unit': unit, 'sort': sort}
 
     # TODO: Make a request to the Event Search endpoint to search for events
     #
@@ -57,11 +58,11 @@ def find_afterparties():
     res = requests.get(url, params=payload)
     
     data = res.json()
-    print(20 * "*")
-    print(data.keys())
-    print(data['page'])
-    print(data['_links'])
-    print(20 * "*")
+    # print(20 * "*")
+    # print(data.keys())
+    # print(data['page'])
+    # print(data['_links'])
+    # print(20 * "*")
 
 
     events = data["_embedded"]["events"]
@@ -82,8 +83,58 @@ def get_event_details(id):
     """View the details of an event."""
 
     # TODO: Finish implementing this view function
+    print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
 
-    return render_template('event-details.html')
+    print(f"id is {id}")
+    
+    url = f'https://app.ticketmaster.com/discovery/v2/events/{id}'
+    print(f"url is {url}")
+    print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
+
+    payload = {"apikey" : API_KEY} #"id" : id}
+
+    res = requests.get(url, params=payload)
+
+    data = res.json()
+    print(20 * "*")
+    # print(f"data is {data} ")
+    print(data.keys())
+    # print(data['images'])
+    # print(data['_links'])
+
+    event_name = data["name"]
+    print(event_name)
+
+    event_image_url = data["images"][0]["url"]
+    print(event_image_url)
+    print(20 * "*")
+    event_tickmaster_url = data["url"]
+    event_start_date = data["dates"]["start"]["localDate"]
+    print(event_start_date)
+    print(20 * "*")
+    
+    # Get Venue API 
+    event_venues = []
+
+    data_event_venue = data["_links"]["venues"]
+
+    for event in data_event_venue:
+        event_url_id = event["href"]
+        venue_url = f"https://app.ticketmaster.com/{event_url_id}"
+        venue_res = requests.get(venue_url, params=payload)
+        venue_data = venue_res.json()
+        event_venue = venue_data["name"]
+        event_venues.append(event_venue)
+
+    # classifications =
+
+
+    return render_template('event-details.html',
+                            event_name = event_name,
+                            event_image_url = event_image_url,
+                            event_tickmaster_url = event_tickmaster_url,
+                            event_start_date = event_start_date,
+                            event_venue = event_venues)
 
 
 if __name__ == '__main__':

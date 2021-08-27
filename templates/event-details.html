@@ -8,7 +8,7 @@
   <div class="row">
     <div class="col">
       {# TODO: Replace EVENT NAME with the event's name #}
-      <h2>EVENT NAME</h2>
+      <h2> {{event_name}} </h2>
 
       {#
         TODO: Replace THIS PAGE IS FOR FURTHER STUDY with
@@ -26,14 +26,14 @@
         TODO: Replace EVENT IMAGE URL with actual URL to one of the
         event images
       #}
-      <img src="EVENT IMAGE URL">
+      <img src="{{event_image_url}}">
 
       <p>
         {#
           TODO: Replace EVENT TICKETMASTER URL with URL to event's
           Ticketmaster page
         #}
-        <a href="EVENT TICKETMASTER URL" target="_blank">
+        <a href="{{event_tickmaster_url}}" target="_blank">
           Go to Ticketmaster page
         </a>
       </p>
@@ -42,7 +42,7 @@
     <div class="col">
       <h3>Start date</h3>
       {# TODO: Replace EVENT START DATE with event's start date #}
-      <p>EVENT START DATE</p>
+      <p>{{event_start_date}}</p>
 
       <h3>Venues</h3>
       <ul>
@@ -52,7 +52,9 @@
 
           Each `li` should contain the name of a venue.
         #}
-        <li>PLACEHOLDER</li>
+        {% for venue in event_venue %}
+        <li>{{ venue }}</li>
+        {% endfor %}
       </ul>
 
       <h3>Classifications</h3>
